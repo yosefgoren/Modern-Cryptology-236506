@@ -1,0 +1,85 @@
+\setcounter{section}{3}
+\subsection{}
+The problem with the scheme proposed is that Bob can just
+fake his result to get whatever he wants: Say that Alice and Bob agreed
+that a result of zero means Alice gets the dog and a result of one means
+Bob gets the dog, and we also assume that Bob wants the dog.
+Bob can get the bit $a$ from Alice, and send her $b=a\oplus 1$.\\
+Now both Bob and Alice will see:
+\[
+	result=b\oplus a = a\oplus 1\oplus a = 1
+\]
+Which means Bob always gets the dog.
+
+\subsection{}
+Alice and Bob can use a coin flipping scheme by deciding that a result of
+zero means that Alice gets the dog, and otherwise - Bob does.\\
+
+We could build a coint flipping scheme with the following two algorithms
+for Alice (denoted with $A$) and Bob (denoted with $B$):\\
+\begin{verbatim}
+	A(n):
+		b = random
+		r = random
+		send commit(b, 1^n;r)
+		recv c'
+		send b,r
+		recv b',r'
+		if commit(b',1^n;r') != c', return 1
+		return xor(b,b')
+
+	B(n):
+		b' = random
+		r' = random
+		recv c
+		send commit(b', 1^n;r')
+		recv b,r
+		send b',r'
+		if commit(b,1^n;r) != c, return 0
+		return xor(b,b')
+\end{verbatim}
+
+Note:\\
+Here $send$ and $recv$ are "blocking" or "synchronous" - meaning
+the algorithm will not advance to the next statment before verifying
+that communication has completed successfully.\\
+
+Correctness:\\
+If both follow the protocol, both $b$ and $b'$ are sampled
+randomly, and also, both parties do not go into the "if" statment
+and thus return $b\oplus b'$; with these two uniformly sampled, their
+xor will also be unfiormly sampled, which means both parties return some
+value randomly sampled from $\{0,1\}$.\\
+
+Alice Soundness:\\
+If alice follows the protocol, she will only send her bit after she 
+sees a commit from her opponent. So her opponent cannot know the value
+of $b$ before sending her some commit $c$. This means the opponent cannnot
+wait until he knows $b$ to decide the value of $b'$ (knowing $b$ would mean breaking
+the "binding" property of the commitment scheme).\\
+If so, there cannot be any dependence between the variables
+$b$ and $b'$ - meaning that regardless of the $b'$ distribution: $b\oplus b'$ is distributed
+evenly between zero and one.\\
+So we can conclude that in cases where the opponent decides
+to send a legal commit message, Alice will return zero with probability $\frac{1}{2}$.\\
+
+Furthermore, in cases where the opponent does not send a legal commit;message pair - Alice
+finds this is the case and returns zero.\\
+
+To sum up, there are two cases; if a legal commit is sent: $\pr[A(n)=1]=\frac{1}{2}$.
+Otherwise: $\pr[A(n)=1]=0$.\\
+Regardless of the distribution between these two cases, the total
+probability for $A(n)=1$, is no more than $\frac{1}{2}$.\\
+
+Bob Correctness:\\
+Mirror proof. Indeed Bob also requires knowing Alice's commit message
+before sending $b'$ in the same way Alice waits for Bob's commit before
+sending $b$ - and in addition, Bob also checks the correctness of the commit
+message sent to him in the same way.
+
+\subsection{}
+Indeed both can exploit an opponent following his/her part of the protocol
+to cause the other to sample their own token - by simply sending an incorrect
+commit message. For example, if Bob sends an incorrect commit message,
+Alice will check that at the end - and thus return 0. If Bob is also
+sampling 0 himself, both sides have "agreed" that the dog should go to Alice.

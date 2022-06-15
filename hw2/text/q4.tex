@@ -1,0 +1,80 @@
+\subsection{}
+Trivial aglorithm:
+\begin{lstlisting}[language=Python]
+	def ForgeTag(reference_msg, reference_tag, new_msg):
+	result = ""
+	for i in range(len(reference_tag)):
+		result += random([0, 1])
+	return result
+\end{lstlisting}
+
+Correctness:\\
+Denote correct tag for $new\_msg$ as $new\_tag$.
+Since the length of $new\_tag$ is $t$ and the algorithm uniformly samples
+from all binary strings of length $t$; there is a $(\frac{1}{2})^t$
+chance that the string randomized by the algorithm will be $new\_tag$.
+Meaning this is the probability of the algorithm being correct.
+
+\subsection{}
+Pairwise Independence:\\
+Let $x_1,x_2\in\mathbb{F}: x_1\neq x_2$. Let $y_1,y_2\in\mathbb{F}$.\\
+\[
+	=\pr_{h\leftarrow H}[h(x_1)=y_1\wedge h(x_2)=y_2]
+	=\pr_{a,b\leftarrow\mathbb{F}}[ax_1+y_1=b\wedge ax_2+y_2=b]\]\[
+	=\sum_{B\in\mathbb{F}}\pr_{a,b\leftarrow\mathbb{F}} [ax_1+y_1=b\wedge ax_2+y_2=b\mid b=B]\pr_{b\leftarrow\mathbb{F}}[b=B]\]\[
+	=\sum_{B\in\mathbb{F}}\pr_{a,b\leftarrow\mathbb{F}} [ax_1+y_1=B\wedge ax_2+y_2=B]\frac{1}{|\mathbb{F}|}\]\[
+	=\frac{1}{|\mathbb{F}|}\sum_{B\in\mathbb{F}}\pr_{a,b\leftarrow\mathbb{F}} [ax_1+y_1=ax_2+y_2=B]\]\[
+	=\frac{1}{|\mathbb{F}|}\pr_{a,b\leftarrow\mathbb{F}} [ax_1+y_1=ax_2+y_2]
+	=\frac{1}{|\mathbb{F}|}\pr_{a,b\leftarrow\mathbb{F}} [a(x_1-x_2)=y_2-y_1]\]\[
+	\eq^{(*)}\frac{1}{|\mathbb{F}|}\pr_{a,b\leftarrow\mathbb{F}} [a=(y_2-y_1)((x_1-x_2))^{-1}]
+	=\frac{1}{|\mathbb{F}|^2}
+	=\frac{1}{2^{2m}}
+	=2^{-2m}
+\]
+\[\square\]
+
+\[
+	(*): x_1\neq x_2\Rightarrow x_1-x_2\neq 0\Rightarrow (x_1-x_2)^{-1}\in\mathbb{F}
+\]
+
+The general case for the range field:\\
+To make use of this same hash family (and proof of independence), in a setting as to
+transfer items from $\mathbb{F}_1$ to $\mathbb{F}_2$; define:
+\[
+	H=\{h_{a,b}\mid a'b\in\mathbb{F}_2\}; h_{a,b}(x)=a\cdot T(x)+b
+\]
+Where $T(\cdot)$ is some transformation $T:\mathbb{F}_1\longrightarrow \mathbb{F}_2$, such that
+$T(0_{\mathbb{F}_1})=0_{\mathbb{F}_2}$ and $T(x+1_{\mathbb{F}_1})=T(x)+T(1_{\mathbb{F}_1})$.
+Under these assumtions, the provided proof from before is correct in the general case.\\
+Also note how in the prior proof, the determining factor for the final probability was
+the size of the field from which $a,b$ are sampled, i.e. $\mathbb{F}_2$ in the 
+general case. Meaning the probability is indeed $2^{-2m}$, where $m=|\mathbb{F}_2|$.
+
+\subsection{}
+Define the following MAC algorithm:
+\begin{lstlisting}[language=Python]
+	def h(a, b, x):
+		"""This is the hash function parameterized by 'a,b' from the H
+			family of pairwise independent functions (from section 4.2).
+			The output field size is the same as that of 'x' and 'y'."""
+		...
+
+	def MakeTag(key, msg):
+		mid = len(key)//2
+		kL = key[:mid]
+		kR = key[mid:]
+		return h(kL, kR, msg)
+\end{lstlisting}
+
+Correctness:\\
+Given that the key is selected randomly, (and the opponent does not have access to it),
+Both sides of the key are also selected randomly - meaning that the algorithm 
+has simply sampled as random hash function from $H$. As stated in section 4.2;
+this means that the behaviour of this randomly selected hash from $H$ must be
+the same as that of a completely random function over the same space. If indeed 
+our tagging scheme behaves in the same way as a random function over the same sapce,
+it means that any PPT will not be able to deduce anything from just one output 
+of our tagging scheme (with a spesific key). Thus any opponent algorithm
+must not do any better than either guessing an output; which would yeild that
+algorithm a chance of success equal to $\frac{1}{N}$ where $N$ is the size of the
+output domain. In our case, $N=2^t$, meaning no opponent can do better than $2^{-t}$.

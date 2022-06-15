@@ -1,0 +1,74 @@
+The algorithm:
+\begin{lstlisting}[language=Python]
+	def Log(a):
+		n = len(a)
+		for _ in range(Poly(n)**2):
+			j = random(1, p(n))
+			b = a*(g(n)**(-j))
+			z = A(b)
+			if b == g(n)**z:
+				return (z+j)%p(n)
+\end{lstlisting}
+
+Claim (Correctness):
+\[
+	\pr_{x\leftarrow \mathbb{Z}_{p_n}^*}[Log(g_n^x)=x]=o(1)
+\]
+
+Proof:\\
+Let $n\in\mathbb{N}$.\\
+Denote the set of randomizations (at line 4) with:
+$J=\{j_i\}_{i=1}^{Poly(n)}$\\
+Also denote the space of all possible sets of randomizations:
+$R=(\mathbb{Z}_{p_n}^*)^{Poly(n)^2}$.\\
+\[
+	\pr_{x\leftarrow \mathbb{Z}_{p_n}^*, J\leftarrow R}[Log(g_n^x)=x]
+	= 1-\pr_{x\leftarrow \mathbb{Z}_{p_n}^*, J\leftarrow R}[Log(g_n^x)\neq x]\]\[
+	\eq^{(*)} 1-\pr_{x\leftarrow \mathbb{Z}_{p_n}^*, J\leftarrow R}
+		[\andloop_{i=1}^{Poly(n)^2}A(g_n^{x-j_i})\neq x]\]\[
+	= 1-\prod_{i=1}^{Poly(n)^2}
+		\pr_{x\leftarrow \mathbb{Z}_{p_n}^*, j\leftarrow \mathbb{Z}_{p_n}^*}
+		[A(g_n^{x-j})\neq x-j]\]\[
+	= 1-\pr_{x\leftarrow \mathbb{Z}_{p_n}^*, j\leftarrow \mathbb{Z}_{p_n}^*}
+		[A(g_n^{x-j})\neq x-j]^{Poly(n)^2}\]\[
+	= 1-\pr_{z\leftarrow \mathbb{Z}_{p_n}^*}
+		[A(g_n^z)\neq z]^{Poly(n)^2}
+	= 1-(1-\pr_{z\leftarrow \mathbb{Z}_{p_n}^*}
+		[A(g_n^z)= z])^{Poly(n)^2}\]\[
+	= 1-(1-\frac{1}{Poly(n)})^{Poly(n)^2}
+		\approach_{n\rightarrow\infty}^{(**)} 1
+\]
+
+Showing $(*)$:\\
+In each iteration of our algorithm, we sample some $j\leftarrow\mathbb{Z}_{p_n}^*$.
+The iterations where our algorithm will return (and we will show why
+in the cases it does return - the returned value is correct) are the cases where:
+$g^{A(a\cdot g^{-j})}=a$; In order for the algorithm to fail, each iteration must fail,
+or in other words:
+\[\andloop_{i=1}^{Poly(n)^2}A(g_n^{x-j_i})\neq x\]
+The values returned by the algorithm are indeed correct, because it only returns
+$z+j$ in cases where $b = g_n^z$, and we can see that:
+\[
+	b = g_n^z
+	\Rightarrow a\cdot g_n^{-j} = g_n^z
+	\Rightarrow g_n^{x-j} = g_n^z\]\[
+	\Rightarrow x-j \eq_{mod(p_n)} z
+	\Rightarrow x \eq_{mod(p_n)} z+j
+\]
+
+Showing $(**)$:\\
+\[
+	Poly(n)\approach_{n\rightarrow\infty}\infty
+	\Rightarrow (1-\frac{1}{Poly(n)})^{Poly(n)}
+		\approach_{n\rightarrow\infty} \frac{1}{e}\]\[
+	\Rightarrow ((1-\frac{1}{Poly(n)})^{Poly(n)})^{Poly(n)}
+		\approach_{n\rightarrow\infty} 0
+	\Rightarrow (1-\frac{1}{Poly(n)^2})^{Poly(n)}
+		\approach_{n\rightarrow\infty} 0\]\[
+	\Rightarrow 1-(1-\frac{1}{Poly(n)^2})^{Poly(n)}
+		\approach_{n\rightarrow\infty} 1
+\]
+Note that if $Poly(n)$ can be a constant and thus will not approach infinity,
+we can deal with such cases by simply defining $Poly'(n)=\max(Poly(n),n)$,
+and using $Poly'(n)$ in our algorith.
+\[\square\]

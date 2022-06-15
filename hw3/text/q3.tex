@@ -1,0 +1,72 @@
+\subsection{Equivalence to Factoring}
+We show a there exists
+a polynomial turing machine for deciding $L$ iff there exists a polynomial factoring
+TM by showing:
+\begin{enumerate}
+	\item Polynomial TM for factoring which uses a polynomial TM for deciding $L$.
+	\item Polynomial TM for deciding $L$ which uses a polynomial TM for factoring.
+\end{enumerate}
+Armed with the church turing thesis; we describe these two turing machines
+as code of a contemporary programming language.
+
+\begin{enumerate}
+	\item Factoring given decision:
+	\lstinputlisting[language=Python]{code/q3_factor.py}
+	Indeed this implementation does a polynomial (w.r to \#bits) number of calls to the oracle,
+	and executes only a polynomial number of operations itself:\\
+	note how each iteration of the binary search algorithm is polynomial with the number of
+	bits of $N$ since it is logarithmic with the size of the search space.
+	In addition, there can only be a polynomial (w.r to \#bits) number of factors
+	since each one is at-least 2; this means there are only a polynomial number
+	of iterations in the main loop.
+	\item Decision given factoring:
+	\lstinputlisting[language=Python]{code/q3_decide.py}
+\end{enumerate}
+
+\subsection{coNP}
+Here we show $L\in NP\cap coNP$ in two parts:
+\begin{itemize}
+	\item $L=L_a\in NP$.
+	\item $\bar{L}=L_b\in NP$.
+\end{itemize}
+To show each of these we will define a relation $R$ which will satisfy all
+conditions:
+\begin{enumerate}
+	\item $\forall(x,y)\in R, |y|=Poly(|x|)$
+	\item $(x,y)\in R \Leftrightarrow x\in L$
+	\item $\exists M_R, \text{ NTM which decides } R \text{ and is polynomial}$.
+\end{enumerate}
+\begin{itemize}
+	\item Define $R_a$ for $L_a$:
+	\[R_a=\{((N,M),p):p\in\mathbb{P}\wedge p>M\wedge N\%p=0\}\]
+	It is easy to see that if $(N,M),p\in R_a$ then since $p$ is a prime factor
+	of $N$ which is larger than $N$ - it means that $(N,M)\in\mathbb{P}$.
+	In addition, $\#bits(p)\leq\#bits(N)$ thus the length is linear (and polynomial).\\
+	As for the last condition, we define a NTM $M_a$ which will decide $R_a$:\\
+	Given some input $M_a$ will simply check for the three conditions for the pair
+	of inputs to be contained within $R_a$. Checking for the first conditon in polynomial
+	time is far from trivial, nevertheless it is widely known that $PRIME\in\mathbb{P}$,
+	and thus it is possible to check if $p\in\mathbb{P}$ in polynomial time;
+	ofcourse it is possible for the other two conditions also.
+	
+	\item Define $R_b$ for $L_b$:
+	\[\{((N,M),S):\prod_{p\in S}p=N\wedge S\subseteq \mathbb{P}\wedge max(S)\leq M\}\]
+	Note how $S$ is the set of prime factors of $N$.
+
+	We define a NTM to decide $R_b$:\\
+	Given an input $((N,M),S)$ - the machine will check each condition for being
+	contained in $R_b$ and accept iff all three are statisfied; taking the product 
+	of a set of numbers can comparing it can be done in polynomial time, same as taking the
+	maximal value in a list. As before, we know that checking if a number is prime
+	can be done in polynomial time, and there can only be a polynomial number of elements in
+	the input to begin with (w.r to the size of the input...).
+	
+	Additionally, it is worth noting how in this case too the length of $S$ will be
+	polynomially bound to the length of $N$ (hence to the length of $(N,M)$ too):
+	This is because the number of prime factors of $N$ is $O(log(N))$,
+	and each of them has length of $O(log(N))$.
+\end{itemize}
+
+To sum up, we have shown that $L\in NP$,
+and that $L_b=\bar{L}\in NP$ hence $L\in coNP$,
+meaining $L\in NP\cap coNP$.

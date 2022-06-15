@@ -1,0 +1,75 @@
+
+\subsection{Inner Product with Random String}
+Let:
+\[
+	<a,b>=(\sum_ia_ib_i)\%2
+\]\[
+	L=\{0,1\}^n
+\]
+Proof:
+Let $b\in L\setminus\{0^n\}$. Let $j$ be the first non-zero index of $b$. Define:
+\[
+	f(a)=a_1a_2...\bar{a_j}..a_n	
+\]
+Lemma I; $<a,b>\eq_2 <f(a),b>+1$:
+\[
+	<a,b>\eq_2\sum_ia_ib_i\eq_2 \sum_{i\neq j}a_ib_i+a_jb_j
+	\eq_2 \sum_{i\neq j}a_ib_i+a_j
+\]\[
+	\eq_2 \sum_{i\neq j}a_ib_i+\bar{a_j}+1
+	\eq_2 \sum_if(a)_ib_i+1
+	<f(a),b>+1
+\]
+Lemma II; $f$ is bijection $\{a:<a,b>\eq_21\}\longleftrightarrow\{a:<a,b>\eq_20\}$:\\
+\[
+	x\in\{a:<a,b>\eq_20\}\Leftrightarrow 
+	<x,b>\eq_20\Leftrightarrow 
+	<f(x),b>+1\eq_20 
+\]\[
+	\Leftrightarrow
+	<f(x),b>\eq_21\Leftrightarrow 
+	f(x)\in\{a:<a,b>\eq_21\}
+\]
+Thus $f$ is bijection.\\
+Proof using the Lemma II: Let:
+\[
+	a=|\{a:<a,b>\eq_21\}|,
+	b=|\{a:<a,b>\eq_20\}|
+\]
+From Lemma II: $a=b$.\\
+In addition one of the two cases must always be correct, hence: $a+b=1$.\\
+Solving these two equations gives $a=b=\frac{1}{2}$.\\
+By definition:
+\[
+	a=\pr_{a\leftarrow L}[<a,b>=\eq_2 0],
+	b=\pr_{a\leftarrow L}[<a,b>=\eq_2 1]	
+\]
+meaning they are both $\frac{1}{2}$.
+
+\subsection{Inner Product is Universal}
+Denote: $H=\{h_a:a\in L\}$.\\
+Let $a\in L$.
+We want to show that:
+\[
+	\forall x,y\in L:x\neq y
+	\pr_{h\leftarrow H}[h(x)=h(y)]\leq \frac{1}{2}
+\]
+Proof:\\
+Let $x,y\in L:x\neq y$.
+\[
+	\pr_{h\leftarrow H}[h(x)=h(y)]=
+	\pr_{a\leftarrow L}[h_a(x)=h_a(y)]
+\]\[
+	=\pr_{a\leftarrow L}[h_a(x)=h_a(y)]
+	=\pr_{a\leftarrow L}[<a,x>=<a,y>]
+\]\[
+	=\sum_{b\in\{0,1\}}\pr_{a\leftarrow L}[<a,x>=<a,y>:<a,x>=b]\cdot\pr[<a,x>=b]	
+\]\[
+	=\sum_{b\in\{0,1\}}\pr_{a\leftarrow L}[<a,x>=<a,y>]\cdot\frac{1}{2}	
+	=\sum_{b\in\{0,1\}}\frac{1}{2}\cdot\frac{1}{2}
+	=\frac{1}{2}
+\]
+Since $\frac{1}{2}$ is the size of the output space, this indeed shows that $H$ is
+universal hash function family.
+
+\subsection{Purifying Randomness}

@@ -1,0 +1,62 @@
+\documentclass{article}
+% basics
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+
+% unique math expressions:
+\usepackage{amsmath}
+\DeclareMathOperator*{\andloop}{\wedge}
+\DeclareMathOperator*{\pr}{Pr}
+\DeclareMathOperator*{\approach}{\longrightarrow}
+\DeclareMathOperator*{\eq}{=}
+\DeclareMathOperator*{\aprx}{\sim}
+
+% grey paper
+\usepackage{xcolor}
+\pagecolor[rgb]{0.11,0.11,0.11}
+\color{white}
+
+% embedded code sections
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+\author{Yosef Goren}
+\title{Modern Cryptology - Homework 2}
+\maketitle
+In this homework I will be denoting $\mathbb{P}$ to mean the set of primes.
+and denoting $a\eq_N b$ to mean $a=b(mod\; N)$.
+\section{Public-key Encryption from QR}
+\input{text/q1}
+\section{Statistically Hiding Commitments}
+\input{text/q2}
+\section{Is Factoring NP complete?}
+\input{text/q3}
+
+
+\end{document}

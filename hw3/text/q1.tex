@@ -1,0 +1,106 @@
+%\href{url}{txt}
+\subsection{QR given factorization}
+For any $X\in\mathbb{N}$ denote: $QR(X)$ as the set of quadratic residues modulus $X$.\\
+Lemma I;
+\[
+	\forall P,Q\in\mathbb{P}:QR(N)=QR(P)\cap QR(Q)
+\]
+Proof Lemma I:\\
+Let $a\in QR(N)$.
+\[
+	\exists x,K: x^2\eq_N a
+	\Rightarrow x^2=a+(K)PQ
+\]\[
+	\Rightarrow x^2=a+(KP)Q\wedge x^2=a+(KQ)P
+\]\[
+	\Rightarrow x^2\eq_Qa\wedge x^2\eq_Pa
+\]\[
+	\Rightarrow a\in QR(Q)\wedge a\in QR(P)
+	\Rightarrow a\in QR(Q)\cap QR(P)
+\]
+Let $a\in QR(P)\cap QR(Q)$.
+Thus:
+\[
+	\exists x_1,x_2: a\eq_Px_1\wedge a\eq_Qx_2	
+\]
+Thanks to the
+\href{https://en.wikipedia.org/wiki/Chinese_remainder_theorem}
+{Chinese remainder theorem}
+we know there exists a solution $x$ which satisfies:
+\[
+	x\eq_Px_1,x\eq_Qx_2
+\]
+Thus:
+\[
+	\Rightarrow a\eq_Px^2,a\eq_Qx^2
+	\Rightarrow a\eq_{PQ}x^2
+	\Rightarrow a\in QR(N)
+\]
+
+Now we use the correctness of the Lemma I to define a polynomial algorithm:
+\lstinputlisting[language=Python]{code/qr_given_factor.py}
+
+Indeed the names of the variables at lines 4 and 5 are informative (and correct) due
+to the properties of Euiler's criterion as seen in class, meaining that
+$a$ is qr modulus $P$ iff $a^{(P-1)/2}\eq_P1$, and same with $Q$.\\
+This together with Lemma I proves the correctness of this algorithm.\\
+
+We have seen in the last homework how modulus exponantiation can be done efficiently;
+which makes this algorithm polynomial.
+
+\subsection{Generating QR}
+In the following, all expressions and operations are in the $\mathbb{Z}_N^*$ group
+unless said otherwise.\\
+Let $x\in QNR(N)$.\\
+
+Lemma I; $x,z\in QNR(N)\Rightarrow zx^{-1}\in QR(N)$:\\
+Since $QNR(N)=QNR(P)\cap QNR(Q)$ we get:
+\[
+	(zx^{-1})^{\frac{p-1}{2}}
+	\eq_P(z)^{\frac{p-1}{2}}(x^{-1})^{\frac{p-1}{2}}
+	\eq_P(z)^{\frac{p-1}{2}}(x^{\frac{p-1}{2}})^{-1}
+	\eq_P(-1)(-1)^{-1}=1
+\]
+and in the same way under modulus $Q$ we get $(zx^{-1})^{\frac{p-1}{2}}\eq_Q1$.
+From Euile's criterion we get that $(zx^{-1})^{\frac{p-1}{2}}\in QR(N)$.\\
+
+Lemma II; $\{y^2x:y\in\mathbb{Z}_N^*\}\supseteq QNR(N)$:\\
+Let $z\in QNR(N)$, from Lemma I we get $x^{-1}z\in QR(N)$
+Thus:
+\[
+	\exists y: y^2=zx^{-1}
+	\Rightarrow y^2x=z
+	\Rightarrow z\in\{y^2x:y\in\mathbb{Z}_N^*\}	
+\]
+
+Lemma III; $\{y^2x:y\in\mathbb{Z}_N^*\}\subseteq QNR(N)$:\\
+Let $y\in\mathbb{Z}_N^*$. Assume $\exists z:z^2=y^2x$.
+Thus:
+\[
+	z^2y^{-2}=x\Rightarrow (zy^{-1})^2=x\Rightarrow x\notin QNR(N)
+\]
+Hence the assumption is incorrect, and $y^2x\in QR(N)$.\\
+
+Proof:\\
+Define $g(z)=z\cdot x$, $g:QR(N)\longrightarrow QNR(N)$.\\
+From Lemma II and III, we get that $g$'s image is exactly $QNR(N)$.\\
+$g$ is invertible and thus is a bijection.\\
+Let:
+\[
+	a^2\in QR(N),\;y\aprx^\$\mathbb{Z}_N^*
+\]
+Since $y^2$ has four different roots:
+\[
+	\pr_{y\leftarrow \mathbb{Z}_N^*}[y^2=a^2]
+	=\frac{4}{|\mathbb{Z}_N^*|}
+	=\frac{1}{\frac{|\mathbb{Z}_N^*|}{4}}
+	=\frac{1}{|QR(N)|}
+\]
+\[
+	\Rightarrow y^2\aprx^\$QR(N)
+\]
+And since $g$ is bijection $QR(N)\rightarrow QNR(N)$:
+\[
+	g(y^2)=y^2x\aprx^\$ QNR(N)
+\]
+\[\square\]
