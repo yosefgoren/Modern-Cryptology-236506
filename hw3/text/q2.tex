@@ -73,3 +73,33 @@ Since $\frac{1}{2}$ is the size of the output space, this indeed shows that $H$ 
 universal hash function family.
 
 \subsection{Purifying Randomness}
+Denote $L_n=\{0,1\}^n$.\\
+Denote a uniform distribution over $G$ with $\mathbb{U}(G)$.\\
+Denote $A\circ B$ operator here denotes a distribution obtained
+by sampling from $a\leftarrow A, b\leftarrow B$ and resulting
+with the sample $a(b)$.\\
+Denote $(A,B)$ to mean a distribution that is sampled
+by sampling $a\leftarrow A, b\leftarrow B$ and returning
+the sample $(a,b)$.\\
+
+The distribution $<r,<r,s>>$ from the question
+can be described with: $(\mathbb{U}(L_n),\mathbb{U}(H)\circ \mathbb{U}(L_1))$
+
+Let $H=\{h_a\}_{a\in L}$ where each $h_a$ is the function 
+defined in the last section.\\
+Now consider \href{https://en.wikipedia.org/wiki/Leftover_hash_lemma}
+{the leftover hash lemma}; indeed we have seen in the prior section,
+$H$ is a universal hash function family.\\
+Thus we conclude from leftover hash lemma that:
+\[
+	SD((\mathbb{U}(H),\mathbb{U}(H)\circ S), (\mathbb{U}(H)), \mathbb{U}(L_1))
+	\leq\frac{\sqrt{\frac{1}{|S|}}}{2}
+\]
+
+No
+
+
+% Assume that the distribution $N_n=(r_n,<r_n,s>)$ is not $O(\sqrt(1/|S|))$
+% close to uniform.\\
+% Hence $\exists D:adv_D(N_n,U_n)\geq \frac{c}{\sqrt{|S|}}$,
+% where $c$ is some positive constant.
