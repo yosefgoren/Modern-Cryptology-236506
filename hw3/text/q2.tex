@@ -83,7 +83,14 @@ by sampling $a\leftarrow A, b\leftarrow B$ and returning
 the sample $(a,b)$.\\
 
 The distribution $<r,<r,s>>$ from the question
-can be described with: $(\mathbb{U}(L_n),\mathbb{U}(H)\circ \mathbb{U}(L_1))$
+can be described with: $(\mathbb{U}(L_n),\mathbb{U}(H)\circ \mathbb{U}(L_1))$.\\
+So we want to show that: 
+\[
+	SD(
+		(\mathbb{U}(L_n),\mathbb{U}(H)\circ \mathbb{U}(L_1))
+		,(\mathbb{U}(L_{n+1}))
+	)=O(\sqrt{\frac{1}{|S|}})
+\]
 
 Let $H=\{h_a\}_{a\in L}$ where each $h_a$ is the function 
 defined in the last section.\\
@@ -92,14 +99,38 @@ Now consider \href{https://en.wikipedia.org/wiki/Leftover_hash_lemma}
 $H$ is a universal hash function family.\\
 Thus we conclude from leftover hash lemma that:
 \[
-	SD((\mathbb{U}(H),\mathbb{U}(H)\circ S), (\mathbb{U}(H)), \mathbb{U}(L_1))
+	SD((\mathbb{U}(H),\mathbb{U}(H)\circ \mathbb{U}(S)), (\mathbb{U}(H)), \mathbb{U}(L_1))
 	\leq\frac{\sqrt{\frac{1}{|S|}}}{2}
 \]
 
-No
+Furthermore; $H$ is defined as $\{h_a:a\in L_n\}$, so sampling
+$h$ uniformly from $H$ is like sampling $a$ uinformly from $L_n$. So we could
+say that:
+\[
+	(\mathbb{U}(L_n),\mathbb{U}(L_1))
+	=(\mathbb{U}(H),\mathbb{U}(L_1))
+\]
+\[
+	(\mathbb{U}(L_n),\mathbb{U}(L_1)\circ \mathbb{U}(S))
+	=(\mathbb{U}(H),\mathbb{U}(L_1)\circ \mathbb{U}(S))
+\]
 
+Going back to the prior formula:
+\[
+	SD((\mathbb{U}(L_n),\mathbb{U}(L_1)\circ \mathbb{U}(S))
+	,(\mathbb{U}(L_n),\mathbb{U}(L_1)))
+	\leq \frac{\sqrt{\frac{1}{|S|}}}{2}
+\]
 
-% Assume that the distribution $N_n=(r_n,<r_n,s>)$ is not $O(\sqrt(1/|S|))$
-% close to uniform.\\
-% Hence $\exists D:adv_D(N_n,U_n)\geq \frac{c}{\sqrt{|S|}}$,
-% where $c$ is some positive constant.
+Finally, since sampling $n+1$ bits uniformly is the same
+sapling $n$ bits, than sampling another bit:
+\[\mathbb{U}(L_{n+1})=(\mathbb{U}(L_n), \mathbb{U}(L_1))\]
+And we have the original statment we wanted to prove:
+\[
+	SD(
+		(\mathbb{U}(L_n),\mathbb{U}(H)\circ \mathbb{U}(L_1))
+		,(\mathbb{U}(L_{n+1}))
+	)=O(\sqrt{\frac{1}{|S|}})
+\]
+
+\subsection{Commitments}

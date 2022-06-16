@@ -51,8 +51,8 @@ which makes this algorithm polynomial.
 \subsection{Generating QR}
 In the following, all expressions and operations are in the $\mathbb{Z}_N^*$ group
 unless said otherwise.\\
-Let $x\in QNR(N)$.\\
 
+Let $x\in QNR(N)$.\\
 Lemma I; $x,z\in QNR(N)\Rightarrow zx^{-1}\in QR(N)$:\\
 Since $QNR(N)=QNR(P)\cap QNR(Q)$ we get:
 \[
@@ -79,7 +79,7 @@ Thus:
 \[
 	z^2y^{-2}=x\Rightarrow (zy^{-1})^2=x\Rightarrow x\notin QNR(N)
 \]
-Hence the assumption is incorrect, and $y^2x\in QR(N)$.\\
+Hence the assumption is incorrect, and $y^2x\in QNR(N)$.\\
 
 Proof:\\
 Define $g(z)=z\cdot x$, $g:QR(N)\longrightarrow QNR(N)$.\\
@@ -106,3 +106,60 @@ And since $g$ is bijection $QR(N)\rightarrow QNR(N)$:
 \[\square\]
 
 \subsection{Public-key Encryption}
+The main idea:\\
+If factoring primes and QR are hard (without factorization), generate two primes, use
+their product as the public key, and their tuple as private key.
+Now this 'private key' can be used as a 'cheat' for solving
+QR problems; anyone that wants to break the cypher will either
+have to find QR without factorization or manage to factor
+the primes from the public key:
+\lstinputlisting[language=Python]{code/qr_pke.py}
+
+For complexity purposes, assume $n$ is given in unary format.
+
+\subsection{Malleability}
+Given two cyphers $c_1,c_2$ encrypted under $N$,
+we can return $c_1\cdot c_2$.\\
+We need to show that if $b_1,b_2$ are the 
+original bits, then:
+\[
+	Decrypt(c_1\cdot c_2)=XOR(b_1,b_2)
+\]
+Since we defined our cypher to be QR in the case that
+the plaintext is 0, and QNR otherwise,
+than this is equivalent to proving that
+$c_1\cdot c_2$ is QNR iff exactly one of the
+bits $b_1,b_2$ is on.\\
+Taking this further; the question is equivalent to 
+showing that $c_1\cdot c_2$ is QNR iff exactly one out 
+of the pair $c_1, c_2$ is QR.\\
+
+Let $c_1\cdot c_2\in QR$.\\
+if both are QR, then:
+\[
+	c_1=y_1^2,c_2=y_2^2	
+\]
+\[
+	c_1c_2=y_1^2y_2^2=(y_1y_2)^2\in QR	
+\]
+if both are QNR then:\\
+Assume that $x_1\cdot x_2\in QNR$. Than from Lemma II 
+in section 1.2: $y^2x=x_1x_2$, thus $x^{-1}x_1x_2$ is 
+QR, contredicting Lemma I.
+So $x_1x_2\in QR$.\\
+
+if $x_1\in QR, x_2\in QNR$ (oppesite case symmetrical);
+than $x_1x_2=y^2x_2\in QR$ from Lemma III.
+
+\subsection{}
+Our algorithm will simply take the input cypher $c$, public key $N$,
+uniformly sample $z$ from ${1...N}$, and return $z^2\cdot c$.
+This works because, as we have seen in section 1.2 multiplying QNR by QR
+results with QNR, and as we have seen in section 1.4; multiplying QR by QR 
+results with a QR. This means that after our operation the cypher
+will be changed, but the decryption will not change (since
+the value of the decryption corresponds exactly to the question of the cypher
+being a QR or being QNR).
+
+
+
